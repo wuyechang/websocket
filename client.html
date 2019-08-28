@@ -3,20 +3,52 @@
 <meta charset="utf-8">
 <script src="./socket.io.js"></script>
 <script>
-  var socket = io.connect('http://localhost:3000');
+  const socket = io.connect('http://localhost:3000');
+
   socket.on('news', function (data) {
     console.log(data);
     socket.emit('notice', 'Hello, bro!');
   });
+
   socket.on('attention', function (data) {
     console.log('attention', data);
   });
+
+  socket.on('message', function (data) {
+    const div = document.getElementById('display');
+    div.innerHTML += data.name + ' : ' + data.message;
+    div.innerHTML += '\n';
+  });
+
+  document.addEventListener( "DOMContentLoaded", () => {
+    document.getElementById("send").onclick = function() {
+      const name = document.getElementById('name').value;
+      const message = document.getElementById('message').value;
+      const div = document.getElementById('display');
+      div.innerHTML += message;
+      div.innerHTML += '\n';
+      socket.emit('message', {
+        name,
+        message,
+      });
+    };
+
+    document.getElementById("change").onclick = function() {
+      const channel = document.getElementById('channel').value;
+      socket.emit('channel', channel);
+    };
+  } );
+
 </script>
 <title>タイトル</title>
 </head>
 <body>
-本文
-<input type="text" name="name" size="30" maxlength="20">
+<input type="text" id="channel" name="channel" size="10" maxlength="10">
+<button id="change">change</button>
+<br />
+<input type="text" id="name" name="name" size="10" maxlength="10">
+<input type="text" id="message" name="message" size="30" maxlength="30">
 <button id="send">send</button>
+<div id="display" style="white-space: pre"></div>
 </body>
 </html>
