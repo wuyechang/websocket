@@ -1,0 +1,22 @@
+<html>
+<head>
+<meta charset="utf-8">
+<script src="./socket.io.js"></script>
+<script>
+  var socket = io.connect('http://localhost:3000');
+  socket.on('news', function (data) {
+    console.log(data);
+    socket.emit('notice', 'Hello, bro!');
+  });
+  socket.on('attention', function (data) {
+    console.log('attention', data);
+  });
+</script>
+<title>タイトル</title>
+</head>
+<body>
+本文
+<input type="text" name="name" size="30" maxlength="20">
+<button id="send">send</button>
+</body>
+</html>
